@@ -2,9 +2,6 @@ package com.example.nataliia.musiclab;
 
 import android.app.Dialog;
 import android.app.Fragment;
-import android.content.Context;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
@@ -13,12 +10,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Created by Nataliia on 04.05.2016.
  */
-public class ScalChooseDur  extends Fragment implements View.OnClickListener{
+public class ScalChooseDur extends Fragment implements View.OnClickListener {
+    static int[] duration;
     Dialog d;
     View v;
     FloatingActionButton info;
@@ -28,9 +25,6 @@ public class ScalChooseDur  extends Fragment implements View.OnClickListener{
     TextView info_txt;
     TextView mistake;
     View.OnClickListener radioListener;
-
-    static int[] duration;
-
     RadioButton divRadio;
     RadioButton modRadio;
 
@@ -51,22 +45,23 @@ public class ScalChooseDur  extends Fragment implements View.OnClickListener{
 
         return v;
     }
+
     @Override
-    public void onClick(View view){
-        switch (view.getId()){
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.info_button_dur:
                 d = new Dialog(getActivity());
                 d.setContentView(R.layout.info_dial);
                 d.setTitle("Info");
-                info_txt = (TextView)d.findViewById(R.id.info_text);
+                info_txt = (TextView) d.findViewById(R.id.info_text);
                 info_txt.setText(getString(R.string.info_dur));
                 d.show();
                 break;
             case R.id.add_dur:
-                if(durFrom.getText().toString().equals("") || durFrom.getText().toString().equals("") || (!divRadio.isChecked() && !modRadio.isChecked())){
-                    mistake = (TextView)v.findViewById(R.id.dur_mistake);
+                if (durFrom.getText().toString().equals("") || durFrom.getText().toString().equals("") || (!divRadio.isChecked() && !modRadio.isChecked())) {
+                    mistake = (TextView) v.findViewById(R.id.dur_mistake);
                     mistake.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     int min, max;
                     min = Integer.parseInt(durFrom.getText().toString());
                     max = Integer.parseInt(durTo.getText().toString());
@@ -82,7 +77,7 @@ public class ScalChooseDur  extends Fragment implements View.OnClickListener{
                         duration = MainActivity.mod_oper(MainActivity.numer, max, min);
                     }
                     String try_string = "";
-                    for(int i = 0; i < duration.length; i++) {
+                    for (int i = 0; i < duration.length; i++) {
                         try_string += Integer.toString(duration[i]) + ", ";
                     }
                     try_text.setText(try_string);
