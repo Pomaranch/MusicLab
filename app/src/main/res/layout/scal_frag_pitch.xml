@@ -108,5 +108,15 @@
         app:fabSize="mini"
         android:id="@+id/add_pitch"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rdgrp"
+        android:text="@string/mistake"
+        android:textColor="@color/colorAccent"
+        android:visibility="gone"
+        android:id="@+id/pitch_mistake"
+        />
+
 
 </RelativeLayout>

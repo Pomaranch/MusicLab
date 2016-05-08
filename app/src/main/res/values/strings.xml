@@ -5,7 +5,7 @@
     <string name="rd_fi">Число φ, золотий перетин</string>
     <string name="rd_e">Число Ейлера</string>
     <string name="decimal">Введіть свою точність (від 2 до 1000):</string>
-    <string name="frgm2">Межі (від 0 до 88):</string>
+    <string name="frgm2">Межі (від 0 до 70):</string>
     <string name="from">Значення від </string>
     <string name="to"> до </string>
     <string name="scl_type1">Метод ділення</string>

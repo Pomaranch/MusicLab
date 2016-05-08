@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                         fTrans.replace(R.id.frgmCont, scalFrag2);
                         break;
                     case 3:
-                        player(ScalChooseDur.duration);
+                        player(ScalChoosePitch.pitch, ScalChooseDur.duration);
                         btnAdd.setVisibility(View.GONE);
                         break;
 
@@ -151,17 +151,17 @@ public class MainActivity extends AppCompatActivity {
     public ConstChoose getConstFrag() {
         return constFrag;
     }
-    public void player(int[] dur){
+    public void player(int[] pit, int[] dur){
         AudioTrack tone;
         Thread timeThread;
         timeThread = new Thread();
         timeThread.start();
 
         for(int i = 0; i < dur.length; i++){
-            tone = generateTone(pitch_const[dur[i]], 250);
+            tone = generateTone(pitch_const[pit[i]], duration_const[dur[i]]);
             tone.play();
             try {
-                timeThread.sleep(250);
+                timeThread.sleep(duration_const[dur[i]]);
             }catch(InterruptedException e){
                 e.printStackTrace();
             }
