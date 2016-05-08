@@ -3,6 +3,8 @@ package com.example.nataliia.musiclab;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     ConstChoose constFrag;
     ScalChoosePitch scalFrag1;
     ScalChooseDur scalFrag2;
+    ToneGenerator tg;
 
 
     static String numer = "";
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         constFrag = new ConstChoose();
         scalFrag1 = new ScalChoosePitch();
         scalFrag2 = new ScalChooseDur();
+        tg = new ToneGenerator(AudioManager.STREAM_MUSIC, (int)(ToneGenerator.MAX_VOLUME*0.5));
 
 
         fTrans = getFragmentManager().beginTransaction();
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
                         fTrans.replace(R.id.frgmCont, scalFrag2);
                         break;
                     case 3:
+                        btnAdd.setVisibility(View.GONE);
+                        break;
 
                 }
                 fTrans.commit();

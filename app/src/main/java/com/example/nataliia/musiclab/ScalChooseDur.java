@@ -3,6 +3,8 @@ package com.example.nataliia.musiclab;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
@@ -79,7 +81,7 @@ public class ScalChooseDur  extends Fragment implements View.OnClickListener{
                     }
                     String try_string = "";
                     for(int i = 0; i < duration.length; i++) {
-                        try_string += Integer.toString(duration[i]) + " ";
+                        try_string += Integer.toString(duration[i]) + ", ";
                     }
                     try_text.setText(try_string);
                     try_dial.show();
