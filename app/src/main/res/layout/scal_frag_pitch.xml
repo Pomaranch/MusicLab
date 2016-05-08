@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/pitch_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:id="@+id/ttl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="monospace"
+        android:text="@string/frgm2"
+        android:textSize="@dimen/text_size_title" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/info_button_pitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/info"
+        app:fabSize="mini" />
+
+
+    <LinearLayout
+        android:id="@+id/edt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ttl"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:fontFamily="monospace"
+            android:text="@string/from"
+            android:textSize="@dimen/text_size" />
+
+        <EditText
+            android:id="@+id/pitch_from"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_weight="2"
+            android:inputType="number"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/to"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="monospace"
+            android:text="@string/to"
+            android:textSize="@dimen/text_size" />
+
+        <EditText
+            android:id="@+id/pitch_to"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_weight="2"
+            android:inputType="number"
+            android:padding="10dp" />
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/rdgrp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edt">
+
+        <RadioButton
+            android:id="@+id/div_pitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="@string/scl_type1"
+            android:textColor="@android:color/tertiary_text_light"
+            android:textSize="@dimen/text_size" />
+
+        <RadioButton
+            android:id="@+id/mod_pitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="@string/scl_type2"
+            android:textColor="@android:color/tertiary_text_light"
+            android:textSize="@dimen/text_size"
+
+            />
+    </RadioGroup>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/rdgrp"
+        android:layout_alignRight="@id/rdgrp"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_add_white_48dp"
+        app:fabSize="mini"
+        android:id="@+id/add_pitch"/>
+
+
+</RelativeLayout>

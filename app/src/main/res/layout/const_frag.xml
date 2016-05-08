@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/activity_vertical_margin"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/frgm1"
+        android:textColor="@android:color/tertiary_text_light"
+        android:fontFamily="monospace"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/const_group">
+
+        <RadioButton
+            android:id="@+id/radio_pi"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:text="@string/rd_pi"
+            android:textColor="@android:color/tertiary_text_light"
+            android:fontFamily="monospace"/>
+
+        <RadioButton
+            android:id="@+id/radio_fi"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:text="@string/rd_fi"
+            android:textColor="@android:color/tertiary_text_light"
+            android:fontFamily="monospace"/>
+
+        <RadioButton
+            android:id="@+id/radio_e"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            android:text="@string/rd_e"
+            android:textColor="@android:color/tertiary_text_light"
+            android:fontFamily="monospace"/>
+    </RadioGroup>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/decimal"
+        android:padding="8dp"
+        android:fontFamily="monospace"
+        />
+    <android.support.v7.widget.AppCompatEditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:inputType="number"
+        />
+</LinearLayout>
