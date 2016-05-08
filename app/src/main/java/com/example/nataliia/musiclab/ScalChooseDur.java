@@ -29,6 +29,8 @@ public class ScalChooseDur  extends Fragment implements View.OnClickListener{
     TextView mistake;
     View.OnClickListener radioListener;
 
+    static int[] duration;
+
     RadioButton divRadio;
     RadioButton modRadio;
 
@@ -72,7 +74,7 @@ public class ScalChooseDur  extends Fragment implements View.OnClickListener{
                     try_dial.setContentView(R.layout.try_dialog);
                     try_dial.setTitle("Is everything OK?");
                     TextView try_text = (TextView) try_dial.findViewById(R.id.try_text);
-                    int[] duration;
+
                     if (divRadio.isChecked()) {
                         duration = MainActivity.div_oper(MainActivity.numer, max, min);
 
