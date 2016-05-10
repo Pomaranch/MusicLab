@@ -87,7 +87,7 @@ public class ScalChoosePitch extends Fragment implements View.OnClickListener{
                         pitch = MainActivity.mod_oper(MainActivity.numer, max, min);
                     }
                     String try_string = "";
-                    for (int i = 0; i < pitch.length; i++) {
+                    for (int i = 1; i < pitch.length; i++) {
                         try_string += Integer.toString(pitch[i]) + ", ";
                     }
                     try_text.setText(try_string);

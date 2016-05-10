@@ -7,21 +7,24 @@ import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.media.ToneGenerator;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import android.media.midi.*;
 
+import jm.audio.Instrument;
+import jm.constants.Pitches;
 
 import jm.constants.Durations;
+
 import jm.constants.ProgramChanges;
+import jm.midi.MidiSynth;
 import jm.music.data.Note;
 import jm.music.data.Part;
 import jm.music.data.Phrase;
 import jm.music.data.Score;
-import jm.util.Write;
+import jm.util.Play;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
     ScalChooseDur scalFrag2;
     ToneGenerator tg;
 
-    double[] pitch_const = {1479.98, 1396.91, 1318.51, 1244.51, 1174.66, 1108.73, 1046.50, 987.767, 932.328, 880.000, 830.609, 783.991, 739.989, 698.456, 659.255, 622.254, 587.330, 554.365, 523.251, 493.883, 466.164, 440.000, 415.305, 391.995, 369.994, 349.228, 329.628, 311.127, 293.665, 277.183, 261.626, 246.942, 233.082, 220.000, 207.652, 195.998, 184.997, 174.614, 164.814, 155.563, 146.832, 138.591, 130.813, 123.471, 116.541, 110.000, 103.826, 97.9989, 92.4986, 87.3071, 82.4069, 77.7817, 73.4162, 69.2957, 65.4064, 61.7354, 58.2705, 55.0000, 51.9130, 48.9995, 46.2493, 43.6536, 41.2035, 38.8909, 36.7081, 34.6479, 32.7032, 30.8677, 29.1353, 27.5000, 34.6479, 32.7032, 30.8677, 29.1353, 27.5000};
+    double[] pitch_const = {440.000, 415.305, 391.995, 369.994, 349.228, 329.628, 311.127, 293.665, 277.183, 261.626, 246.942, 233.082, 220.000, 207.652, 195.998, 184.997, 174.614, 164.814, 155.563, 146.832, 138.591, 130.813, 123.471, 116.541, 110.000, 103.826, 97.9989, 92.4986, 87.3071, 82.4069, 77.7817, 73.4162, 69.2957, 65.4064, 61.7354, 58.2705, 55.0000, 51.9130, 48.9995, 46.2493, 43.6536, 41.2035, 38.8909, 36.7081, 34.6479, 32.7032, 30.8677, 29.1353, 27.5000, 34.6479, 32.7032, 30.8677, 29.1353, 27.5000};
 
-    int[] duration_const = {125,250,500,1000,2000,4000};
+    int[] duration_const = {200,250,300,350,400,500};
 
     FragmentTransaction fTrans;
     FloatingActionButton btnAdd;
@@ -121,9 +124,7 @@ public class MainActivity extends AppCompatActivity {
         constFrag = new ConstChoose();
         scalFrag1 = new ScalChoosePitch();
         scalFrag2 = new ScalChooseDur();
-        tg = new ToneGenerator(AudioManager.STREAM_MUSIC, ToneGenerator.MAX_VOLUME);
         am = (AudioManager) getSystemService(AUDIO_SERVICE);
-
 
         fTrans = getFragmentManager().beginTransaction();
         fTrans.add(R.id.frgmCont, constFrag);
@@ -137,14 +138,13 @@ public class MainActivity extends AppCompatActivity {
                 frgmCount++;
                 switch (frgmCount) {
                     case 1:
-                        jmPlayer();
-                        /*if (numer.equals("")) {
+                        if (numer.equals("")) {
                             frgmCount--;
                             Toast.makeText(getApplicationContext(), "Оберіть один з варіантів", Toast.LENGTH_SHORT).show();
                         } else {
                             scalFrag1.setRetainInstance(true);
                             fTrans.replace(R.id.frgmCont, scalFrag1);
-                        }*/
+                        }
                         break;
                     case 2:
                         scalFrag2.setRetainInstance(true);
@@ -153,6 +153,9 @@ public class MainActivity extends AppCompatActivity {
                     case 3:
                         btnAdd.setVisibility(View.GONE);
                         player(ScalChoosePitch.pitch, ScalChooseDur.duration);
+                        Log.d("LOG", Integer.toString(ScalChooseDur.duration.length));
+                        Log.d("LOG", Integer.toString(ScalChoosePitch.pitch.length));
+
                         break;
 
                 }
@@ -165,21 +168,29 @@ public class MainActivity extends AppCompatActivity {
     public ConstChoose getConstFrag() {
         return constFrag;
     }
+
+
     public void player(int[] pit, int[] dur){
         AudioTrack tone;
         Thread timeThread;
         timeThread = new Thread();
         timeThread.start();
 
-        for(int i = 0; i < dur.length; i++){
-
+        for(int i = 1; i < pitch_const.length; i++){
+            Log.d("LOG", Integer.toString(i));
             try {
                 timeThread.sleep(duration_const[dur[i]]);
             }catch(InterruptedException e){
                 e.printStackTrace();
             }
-            tone = generateTone(pitch_const[pit[i]], duration_const[dur[i]]);
-           // tone.play();
+            try {
+                tone = generateTone(pitch_const[pit[i]], duration_const[dur[i]]);
+                tone.play();
+
+            }catch (Exception e){
+                e.getCause();
+                e.printStackTrace();
+            }
 
 
         }
@@ -215,19 +226,21 @@ public class MainActivity extends AppCompatActivity {
         track.write(samples, 0, count);
         return track;
     }
-    public void jmPlayer(){
+    /* public void jmPlayer(){
         Score stochScore = new Score("JMDemo - Stochastic");
         Part inst = new Part("Piano", ProgramChanges.PIANO, 0);
         Phrase phr = new Phrase();
+        Instrument instrument = new RTPluckInst(44100);
         for(int i=0;i<32;i++){
-            Note note = new Note((int)(Math.random()*127), Durations.CROTCHET);
+            Note note = new Note(Pitches.A2, Durations.CROTCHET);
             phr.addNote(note);
         }
         inst.addPhrase(phr);
         stochScore.addPart(inst);
-        Write.midi(stochScore, "stochy.mid");
+        //Write.midi(stochScore, "stochy.mid");
+        Play.audio(inst,instrument);
 
-       mediaPlayer = new MediaPlayer();
+      mediaPlayer = new MediaPlayer();
         try{
             mediaPlayer.setDataSource("stochy.mid");
         }catch (Exception e){
@@ -240,10 +253,11 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         mediaPlayer.start();
+        }
+*/
 
 
 
-    }
 
 }
 

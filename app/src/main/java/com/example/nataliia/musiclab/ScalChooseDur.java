@@ -88,7 +88,7 @@ public class ScalChooseDur extends Fragment implements View.OnClickListener {
                         duration = MainActivity.mod_oper(MainActivity.numer, max, min);
                     }
                     String try_string = "";
-                    for (int i = 0; i < duration.length; i++) {
+                    for (int i = 1; i < duration.length; i++) {
                         try_string += Integer.toString(duration[i]) + ", ";
                     }
                     try_text.setText(try_string);
