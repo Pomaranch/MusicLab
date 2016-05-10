@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by Nataliia on 04.05.2016.
@@ -64,8 +65,16 @@ public class ScalChoosePitch extends Fragment implements View.OnClickListener{
                     mistake.setVisibility(View.VISIBLE);
                 } else {
                     int min, max;
-                    min = Integer.parseInt(pitchFrom.getText().toString());
-                    max = Integer.parseInt(pitchTo.getText().toString());
+                    if(Integer.parseInt(pitchFrom.getText().toString()) < Integer.parseInt(pitchTo.getText().toString())){
+                        min = Integer.parseInt(pitchFrom.getText().toString());
+                        max = Integer.parseInt(pitchTo.getText().toString());
+                    }else if(pitchFrom.getText().toString().equals(pitchTo.getText().toString())){
+                        Toast.makeText(getActivity(), "Значення повинні відрізнятися", Toast.LENGTH_SHORT).show();
+                        break;
+                    }else{
+                        max = Integer.parseInt(pitchFrom.getText().toString());
+                        min = Integer.parseInt(pitchTo.getText().toString());
+                    }
                     Dialog try_dial = new Dialog(getActivity());
                     try_dial.setContentView(R.layout.try_dialog);
                     try_dial.setTitle("Is everything OK?");
