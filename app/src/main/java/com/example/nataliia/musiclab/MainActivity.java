@@ -13,29 +13,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class MainActivity extends AppCompatActivity {
-
-    private SoundPool mSoundPool;
-    private int[] samples = {R.raw.a_min7, R.raw.a_sharp_min7, R.raw.b_min7,R.raw.c_min7low_pitch, R.raw.c_sharp_min7, R.raw.d_min7, R.raw.d_sharp_min7, R.raw.e_min7, R.raw.f_sharp_min7, R.raw.c_sharp_min7, R.raw.g_min7, R.raw.g_sharp_min7};
-    private int[] sounds = new int[samples.length];
-    private int[] a_samples = {R.raw.a_middle, R.raw.a_sharp_middle, R.raw.b_middle, R.raw.c_middle, R.raw.c_sharp_middle, R.raw.d_middle, R.raw.d_sharp_middle, R.raw.e_middle, R.raw.f_middle, R.raw.c_sharp_middle, R.raw.g_middle, R.raw.g_sharp_min7};
-    private int[] a_sounds = new int[a_samples.length];
 
     static String numer = "";
     ConstChoose constFrag;
     ScalChoosePitch scalFrag1;
     ScalChooseDur scalFrag2;
     int[] duration_const = {250, 500, 1000, 1500, 2000, 2500};
-
     FragmentTransaction fTrans;
     FloatingActionButton btnAdd;
     int frgmCount;
+    private SoundPool mSoundPool;
+    private int[] samples = {R.raw.a_min7, R.raw.a_sharp_min7, R.raw.b_min7,R.raw.c_min7low_pitch, R.raw.c_sharp_min7, R.raw.d_min7, R.raw.d_sharp_min7, R.raw.e_min7, R.raw.f_sharp_min7, R.raw.c_sharp_min7, R.raw.g_min7, R.raw.g_sharp_min7};
+    private int[] sounds = new int[samples.length];
+    private int[] a_samples = {R.raw.a_middle, R.raw.a_sharp_middle, R.raw.b_middle, R.raw.c_middle, R.raw.c_sharp_middle, R.raw.d_middle, R.raw.d_sharp_middle, R.raw.e_middle, R.raw.f_middle, R.raw.c_sharp_middle, R.raw.g_middle, R.raw.g_sharp_min7};
+    private int[] a_sounds = new int[a_samples.length];
 
     public static String piSpigot(final int n) {
         // найденные цифры сразу же будем записывать в StringBuilder
@@ -172,13 +166,10 @@ public class MainActivity extends AppCompatActivity {
                             frgmCount--;
                         }else{
                           //  btnAdd.setBackgroundResource(R.drawable.ic_replay_white_48dp);
-                            for(int i = 0; i < ScalChooseDur.duration.length; i++){
-                                try {
-                                    musicPlay(ScalChoosePitch.pitch[i],ScalChooseDur.duration[i]);
-                                }catch (Exception e){
-                                    e.getCause();
-                                }
-                            }
+                            musicPlay();
+
+
+
                         }
                         break;
 
@@ -209,17 +200,24 @@ public class MainActivity extends AppCompatActivity {
     private void resume(){
         mSoundPool.autoResume();
     }
-    private void musicPlay(int i, int j){
-        Thread timeThread;
-        timeThread = new Thread();
-        timeThread.start();
-        mSoundPool.play(sounds[i], 1, 1, 1, 0, 1);
-        mSoundPool.play(a_sounds[i], 1, 1, 1,0,1);
-        try{
-            timeThread.sleep(duration_const[j]);
-        }catch (InterruptedException e){
-            e.printStackTrace();
-        }
+
+    private void musicPlay() {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    for (int i = 0; i < ScalChooseDur.duration.length; i++) {
+                        mSoundPool.play(sounds[ScalChoosePitch.pitch[i]], 1, 1, 1, 0, 1);
+                        mSoundPool.play(a_sounds[ScalChoosePitch.pitch[i]], 1, 1, 1, 0, 1);
+
+                        Thread.sleep(duration_const[ScalChooseDur.duration[i]]);
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }.start();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
