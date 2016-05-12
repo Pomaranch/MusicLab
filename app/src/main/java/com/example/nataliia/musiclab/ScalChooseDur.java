@@ -60,7 +60,7 @@ public class ScalChooseDur extends Fragment implements View.OnClickListener {
                 d.show();
                 break;
             case R.id.add_dur:
-                if (durFrom.getText().toString().equals("") || durFrom.getText().toString().equals("") || (!divRadio.isChecked() && !modRadio.isChecked())) {
+                if (durFrom.getText().toString().equals("") || durTo.getText().toString().equals("") || (!divRadio.isChecked() && !modRadio.isChecked())) {
                     mistake = (TextView) v.findViewById(R.id.dur_mistake);
                     mistake.setVisibility(View.VISIBLE);
                 } else {

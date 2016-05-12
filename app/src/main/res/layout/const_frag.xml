@@ -59,7 +59,12 @@
     <android.support.v7.widget.AppCompatEditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:textSize="@dimen/text_size"
+        android:fontFamily="monospace"
         android:inputType="number"
+        android:id="@+id/ed_precision"
+        android:textColorHint="@android:color/secondary_text_dark"
+        android:hint="@string/length_def"
+
         />
 </LinearLayout>

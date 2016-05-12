@@ -4,6 +4,7 @@
     <string name="rd_pi">Число Пі, π</string>
     <string name="rd_fi">Число φ, золотий перетин</string>
     <string name="rd_e">Число Ейлера</string>
+    <string name="length_def">За замовченням: 100</string>
     <string name="decimal">Введіть свою точність (від 2 до 1000):</string>
     <string name="frgm2">Межі (від 0 до 70):</string>
     <string name="from">Значення від </string>

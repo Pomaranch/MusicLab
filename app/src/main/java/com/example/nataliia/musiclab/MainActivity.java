@@ -1,6 +1,7 @@
 package com.example.nataliia.musiclab;
 
 import android.annotation.TargetApi;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -11,7 +12,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     ScalChoosePitch scalFrag1;
     ScalChooseDur scalFrag2;
     int[] duration_const = {250, 500, 1000, 1500, 2000, 2500};
-
 
     FragmentTransaction fTrans;
     FloatingActionButton btnAdd;
@@ -100,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
         return output;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,33 +140,57 @@ public class MainActivity extends AppCompatActivity {
                             frgmCount--;
                             Toast.makeText(getApplicationContext(), "Оберіть один з варіантів", Toast.LENGTH_SHORT).show();
                         } else {
-                            scalFrag1.setRetainInstance(true);
+                            String precision = "";
+                            Fragment temp  = getFragmentManager().findFragmentById(R.id.frgmCont);
+                            try {
+                                precision = ((EditText) temp.getView().findViewById(R.id.ed_precision)).getText().toString();
+                            }catch (NullPointerException e){
+                                e.printStackTrace();
+                            }
+                            if(precision.equals("")){
+                                numer = numer.substring(0, 100);
+                            }else{
+                                numer = numer.substring(0, Integer.parseInt(precision));
+                            }
+
+                            scalFrag1.setRetainInstance(false);
                             fTrans.replace(R.id.frgmCont, scalFrag1);
                         }
                         break;
                     case 2:
-                        if(ScalChoosePitch.pitch.length == 0){
+                        if(ScalChoosePitch.pitch == null){
                             Toast.makeText(getApplication(), R.string.no_add, Toast.LENGTH_SHORT).show();
                             frgmCount--;
                         }else{
-                            scalFrag2.setRetainInstance(true);
+                            scalFrag2.setRetainInstance(false);
                             fTrans.replace(R.id.frgmCont, scalFrag2);
                         }
                         break;
                     case 3:
-                        if(ScalChooseDur.duration.length == 0){
+                        if(ScalChooseDur.duration == null){
                             Toast.makeText(getApplication(), R.string.no_add, Toast.LENGTH_SHORT).show();
                             frgmCount--;
                         }else{
-                            btnAdd.setVisibility(View.GONE);
+                          //  btnAdd.setBackgroundResource(R.drawable.ic_replay_white_48dp);
                             for(int i = 0; i < ScalChooseDur.duration.length; i++){
                                 try {
-                                    musicPlay(ScalChooseDur.duration[i], ScalChoosePitch.pitch[i]);
+                                    musicPlay(ScalChoosePitch.pitch[i],ScalChooseDur.duration[i]);
                                 }catch (Exception e){
                                     e.getCause();
                                 }
                             }
                         }
+                        break;
+
+                    case 4:
+                        constFrag = new ConstChoose();
+                        scalFrag1 = new ScalChoosePitch();
+                        scalFrag2 = new ScalChooseDur();
+                        fTrans.add(R.id.frgmCont, constFrag);
+                        frgmCount = 0;
+
+                        break;
+                    default:
                         break;
                 }
                 fTrans.commit();
@@ -185,12 +213,11 @@ public class MainActivity extends AppCompatActivity {
         Thread timeThread;
         timeThread = new Thread();
         timeThread.start();
-
-        mSoundPool.play(sounds[j], 1, 1, 1, 0, 1);
-        mSoundPool.play(a_sounds[j], 1, 1, 1,0,1);
-        try {
-              timeThread.sleep(duration_const[i]);
-        }catch(InterruptedException e){
+        mSoundPool.play(sounds[i], 1, 1, 1, 0, 1);
+        mSoundPool.play(a_sounds[i], 1, 1, 1,0,1);
+        try{
+            timeThread.sleep(duration_const[j]);
+        }catch (InterruptedException e){
             e.printStackTrace();
         }
     }
@@ -208,7 +235,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
+        mSoundPool.release();
         super.onStop();
     }
+
 }
 

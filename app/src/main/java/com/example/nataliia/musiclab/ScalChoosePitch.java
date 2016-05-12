@@ -60,7 +60,7 @@ public class ScalChoosePitch extends Fragment implements View.OnClickListener{
                 d.show();
                 break;
             case R.id.add_pitch:
-                if (pitchFrom.getText().toString().equals("") || pitchFrom.getText().toString().equals("") || (!divRadio.isChecked() && !modRadio.isChecked())) {
+                if (pitchFrom.getText().toString().equals("") || pitchTo.getText().toString().equals("") || (!divRadio.isChecked() && !modRadio.isChecked())) {
                     mistake = (TextView) v.findViewById(R.id.pitch_mistake);
                     mistake.setVisibility(View.VISIBLE);
                 } else {
