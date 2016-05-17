@@ -6,6 +6,7 @@ import android.app.FragmentTransaction;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,12 +29,19 @@ public class MainActivity extends AppCompatActivity {
     int[] duration_const = {250, 500, 1000, 1500, 2000, 2500};
     FragmentTransaction fTrans;
     FloatingActionButton btnAdd;
+    FloatingActionButton btnRestart;
+
     int frgmCount;
     private SoundPool mSoundPool;
-    private int[] samples = {R.raw.a_min7, R.raw.a_sharp_min7, R.raw.b_min7,R.raw.c_min7low_pitch, R.raw.c_sharp_min7, R.raw.d_min7, R.raw.d_sharp_min7, R.raw.e_min7, R.raw.f_sharp_min7, R.raw.c_sharp_min7, R.raw.g_min7, R.raw.g_sharp_min7};
+    private int[] samples = {R.raw.a_min7, R.raw.a_sharp_min7, R.raw.b_min7, R.raw.c_min7low_pitch, R.raw.c_sharp_min7, R.raw.d_min7, R.raw.d_sharp_min7, R.raw.e_min7, R.raw.f_sharp_min7, R.raw.c_sharp_min7, R.raw.g_min7, R.raw.g_sharp_min7};
     private int[] sounds = new int[samples.length];
     private int[] a_samples = {R.raw.a_middle, R.raw.a_sharp_middle, R.raw.b_middle, R.raw.c_middle, R.raw.c_sharp_middle, R.raw.d_middle, R.raw.d_sharp_middle, R.raw.e_middle, R.raw.f_middle, R.raw.c_sharp_middle, R.raw.g_middle, R.raw.g_sharp_min7};
     private int[] a_sounds = new int[a_samples.length];
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     public static String piSpigot(final int n) {
         // найденные цифры сразу же будем записывать в StringBuilder
@@ -109,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
         scalFrag1 = new ScalChoosePitch();
         scalFrag2 = new ScalChooseDur();
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
-            mSoundPool =  new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
-        }else{
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            mSoundPool = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
+        } else {
             createNewSoundPool();
         }
         sounds = setSounds(samples);
@@ -122,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
         fTrans.commit();
 
         btnAdd = (FloatingActionButton) findViewById(R.id.btn_add);
+        btnRestart = (FloatingActionButton) findViewById(R.id.btn_restart);
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,21 +143,21 @@ public class MainActivity extends AppCompatActivity {
                 frgmCount++;
                 switch (frgmCount) {
                     case 1:
-                        Log.d("OO",Integer.toString(sounds.length));
+                        Log.d("OO", Integer.toString(sounds.length));
                         if (numer.equals("")) {
                             frgmCount--;
                             Toast.makeText(getApplicationContext(), "Оберіть один з варіантів", Toast.LENGTH_SHORT).show();
                         } else {
                             String precision = "";
-                            Fragment temp  = getFragmentManager().findFragmentById(R.id.frgmCont);
+                            Fragment temp = getFragmentManager().findFragmentById(R.id.frgmCont);
                             try {
                                 precision = ((EditText) temp.getView().findViewById(R.id.ed_precision)).getText().toString();
-                            }catch (NullPointerException e){
+                            } catch (NullPointerException e) {
                                 e.printStackTrace();
                             }
-                            if(precision.equals("")){
+                            if (precision.equals("")) {
                                 numer = numer.substring(0, 100);
-                            }else{
+                            } else {
                                 numer = numer.substring(0, Integer.parseInt(precision));
                             }
 
@@ -152,34 +166,23 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
                     case 2:
-                        if(ScalChoosePitch.pitch == null){
+                        if (ScalChoosePitch.pitch == null) {
                             Toast.makeText(getApplication(), R.string.no_add, Toast.LENGTH_SHORT).show();
                             frgmCount--;
-                        }else{
+                        } else {
                             scalFrag2.setRetainInstance(false);
                             fTrans.replace(R.id.frgmCont, scalFrag2);
                         }
                         break;
                     case 3:
-                        if(ScalChooseDur.duration == null){
+                        if (ScalChooseDur.duration == null) {
                             Toast.makeText(getApplication(), R.string.no_add, Toast.LENGTH_SHORT).show();
                             frgmCount--;
-                        }else{
-                          //  btnAdd.setBackgroundResource(R.drawable.ic_replay_white_48dp);
+                        } else {
+                            btnAdd.setVisibility(View.GONE);
+                            btnRestart.setVisibility(View.VISIBLE);
                             musicPlay();
-
-
-
                         }
-                        break;
-
-                    case 4:
-                        constFrag = new ConstChoose();
-                        scalFrag1 = new ScalChoosePitch();
-                        scalFrag2 = new ScalChooseDur();
-                        fTrans.add(R.id.frgmCont, constFrag);
-                        frgmCount = 0;
-
                         break;
                     default:
                         break;
@@ -187,6 +190,9 @@ public class MainActivity extends AppCompatActivity {
                 fTrans.commit();
             }
         });
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     public int[] setSounds(int[] sampl) {
@@ -197,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         return sound;
     }
 
-    private void resume(){
+    private void resume() {
         mSoundPool.autoResume();
     }
 
@@ -211,6 +217,21 @@ public class MainActivity extends AppCompatActivity {
                         mSoundPool.play(a_sounds[ScalChoosePitch.pitch[i]], 1, 1, 1, 0, 1);
 
                         Thread.sleep(duration_const[ScalChooseDur.duration[i]]);
+
+                        btnRestart.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                constFrag = new ConstChoose();
+                                scalFrag1 = new ScalChoosePitch();
+                                scalFrag2 = new ScalChooseDur();
+                                fTrans = getFragmentManager().beginTransaction();
+                                fTrans.add(R.id.frgmCont, constFrag);
+                                fTrans.commit();
+                                frgmCount = 0;
+                                btnAdd.setVisibility(View.VISIBLE);
+                                btnRestart.setVisibility(View.GONE);
+                            }
+                        });
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -235,7 +256,42 @@ public class MainActivity extends AppCompatActivity {
     public void onStop() {
         mSoundPool.release();
         super.onStop();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.nataliia.musiclab/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.disconnect();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.nataliia.musiclab/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
 }
 
