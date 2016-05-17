@@ -35,7 +35,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="8dp"
         android:src="@drawable/ic_replay_white_48dp"
-        android:visibility="gone"
         app:fabSize="normal" />
 
 

@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton btnAdd;
     FloatingActionButton btnRestart;
 
+    boolean stopFlag = false;
+
     int frgmCount;
     private SoundPool mSoundPool;
     private int[] samples = {R.raw.a_min7, R.raw.a_sharp_min7, R.raw.b_min7, R.raw.c_min7low_pitch, R.raw.c_sharp_min7, R.raw.d_min7, R.raw.d_sharp_min7, R.raw.e_min7, R.raw.f_sharp_min7, R.raw.c_sharp_min7, R.raw.g_min7, R.raw.g_sharp_min7};
@@ -134,8 +136,6 @@ public class MainActivity extends AppCompatActivity {
         fTrans.commit();
 
         btnAdd = (FloatingActionButton) findViewById(R.id.btn_add);
-        btnRestart = (FloatingActionButton) findViewById(R.id.btn_restart);
-
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -190,6 +190,28 @@ public class MainActivity extends AppCompatActivity {
                 fTrans.commit();
             }
         });
+
+        btnRestart = (FloatingActionButton) findViewById(R.id.btn_restart);
+        btnRestart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                constFrag = new ConstChoose();
+                scalFrag1 = new ScalChoosePitch();
+                scalFrag2 = new ScalChooseDur();
+
+
+                fTrans = getFragmentManager().beginTransaction();
+                fTrans.replace(R.id.frgmCont, constFrag);
+                fTrans.commit();
+                frgmCount = 0;
+
+                stopFlag = true;
+
+                btnAdd.setVisibility(View.VISIBLE);
+                btnRestart.setVisibility(View.GONE);
+            }
+        });
+        btnRestart.setVisibility(View.GONE);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -208,30 +230,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void musicPlay() {
+        stopFlag = false;
+
         new Thread() {
             @Override
             public void run() {
                 try {
-                    for (int i = 0; i < ScalChooseDur.duration.length; i++) {
+                    for (int i = 0; i < ScalChooseDur.duration.length && !stopFlag; i++) {
                         mSoundPool.play(sounds[ScalChoosePitch.pitch[i]], 1, 1, 1, 0, 1);
                         mSoundPool.play(a_sounds[ScalChoosePitch.pitch[i]], 1, 1, 1, 0, 1);
 
                         Thread.sleep(duration_const[ScalChooseDur.duration[i]]);
-
-                        btnRestart.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                constFrag = new ConstChoose();
-                                scalFrag1 = new ScalChoosePitch();
-                                scalFrag2 = new ScalChooseDur();
-                                fTrans = getFragmentManager().beginTransaction();
-                                fTrans.add(R.id.frgmCont, constFrag);
-                                fTrans.commit();
-                                frgmCount = 0;
-                                btnAdd.setVisibility(View.VISIBLE);
-                                btnRestart.setVisibility(View.GONE);
-                            }
-                        });
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
